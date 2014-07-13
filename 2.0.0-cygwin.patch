@@ -1,0 +1,54 @@
+--- origsrc/libressl-2.0.0/configure.ac	2014-07-11 11:16:40.000000000 -0500
++++ src/libressl-2.0.0/configure.ac	2014-07-13 03:16:20.619758600 -0500
+@@ -6,7 +6,7 @@ AC_CONFIG_MACRO_DIR([m4])
+ m4_ifdef([AM_SILENT_RULES], [AM_SILENT_RULES([yes])])
+ 
+ AC_SUBST([USER_CFLAGS], "-O2 $CFLAGS")
+-CFLAGS="$CFLAGS -Wall -Werror -std=c99 -g -Wno-pointer-sign"
++CFLAGS="$CFLAGS -Wall -Werror -std=gnu99 -g -Wno-pointer-sign"
+ 
+ case $target_os in
+ 	*darwin*)
+--- origsrc/libressl-2.0.0/crypto/compat/issetugid_linux.c	2014-07-10 08:43:38.000000000 -0500
++++ src/libressl-2.0.0/crypto/compat/issetugid_linux.c	2014-07-13 03:35:33.913046600 -0500
+@@ -4,7 +4,9 @@
+  */
+ 
+ #include <errno.h>
++#ifdef __GLIBC__
+ #include <gnu/libc-version.h>
++#endif
+ #include <string.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+--- origsrc/libressl-2.0.0/tests/biotest.c	2014-07-11 12:41:26.000000000 -0500
++++ src/libressl-2.0.0/tests/biotest.c	2014-07-13 05:45:24.737615100 -0500
+@@ -98,6 +98,7 @@ do_bio_get_host_ip_tests(void)
+ 			failed = 1;
+ 			continue;
+ 		}
++#pragma GCC diagnostic ignored "-Wstrict-aliasing"
+ 		if (ret && ntohl(*((uint32_t *)ip)) != bgit->ip) {
+ 			fprintf(stderr, "FAIL: test %zi (\"%s\") returned ip "
+ 			    "%x != %x\n", i, bgit->input,
+--- origsrc/libressl-2.0.0/tests/explicit_bzero.c	2014-07-11 12:41:26.000000000 -0500
++++ src/libressl-2.0.0/tests/explicit_bzero.c	2014-07-13 05:24:47.909358100 -0500
+@@ -21,6 +21,8 @@
+ #include <string.h>
+ #include <unistd.h>
+ 
++#ifdef SA_ONSTACK
++
+ #define ASSERT_EQ(a, b) assert((a) == (b))
+ #define ASSERT_NE(a, b) assert((a) != (b))
+ #define ASSERT_GE(a, b) assert((a) >= (b))
+@@ -195,3 +197,9 @@ main()
+ 
+ 	return (0);
+ }
++
++#else /* defined SA_ONSTACK */
++
++int main() { return (0); }
++
++#endif /* defined SA_ONSTACK */

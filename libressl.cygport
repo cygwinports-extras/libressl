@@ -1,0 +1,28 @@
+NAME="libressl"
+VERSION=2.0.0
+RELEASE=1
+CATEGORY="Libs"
+SUMMARY="A general purpose cryptography toolkit with TLS implementation"
+DESCRIPTION="The OpenSSL toolkit provides support for secure communications between
+machines. OpenSSL includes a certificate management tool and shared
+libraries which provide various cryptographic algorithms and protocols."
+HOMEPAGE="http://www.openssl.org/"
+SRC_URI="ftp://ftp.openbsd.org/pub/OpenBSD/LibreSSL/${NAME}-${VERSION}.tar.gz"
+PATCH_URI="
+	2.0.0-no-undefined.patch
+	2.0.0-cygwin.patch
+"
+
+PKG_NAMES="openssl libcrypto29 libssl26 libssl-devel"
+openssl_CATEGORY="Net"
+openssl_CONTENTS="usr/bin/openssl.exe usr/share/doc usr/share/man/man1/"
+libcrypto29_REQUIRES="ca-certificates"
+libcrypto29_CONTENTS="usr/bin/cygcrypto-29.dll"
+libssl26_CONTENTS="usr/bin/cygssl-26.dll"
+libssl_devel_OBSOLETES="openssl-devel"
+libssl_devel_CONTENTS="usr/include usr/lib/*.a usr/share/man/man3/"
+
+# funopen: 3rd argument size_t vs int
+CYGCONF_ARGS="
+	ac_cv_func_funopen=no
+"
