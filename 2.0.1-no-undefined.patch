@@ -1,0 +1,23 @@
+--- origsrc/libressl-2.0.1/crypto/Makefile.am
++++ src/libressl-2.0.1/crypto/Makefile.am
+@@ -7,7 +7,7 @@ AM_CPPFLAGS += -I$(top_srcdir)/crypto/mo
+ lib_LTLIBRARIES = libcrypto.la
+ 
+ libcrypto_la_LIBADD = libcompat.la libcompatnoopt.la
+-libcrypto_la_LDFLAGS = -version-info 30:0:0
++libcrypto_la_LDFLAGS = -version-info 30:0:0 -no-undefined
+ libcrypto_la_CFLAGS = $(CFLAGS) $(USER_CFLAGS) -DOPENSSL_NO_HW_PADLOCK
+ 
+ noinst_LTLIBRARIES = libcompat.la libcompatnoopt.la
+--- origsrc/libressl-2.0.1/ssl/Makefile.am
++++ src/libressl-2.0.1/ssl/Makefile.am
+@@ -2,7 +2,8 @@ include $(top_srcdir)/Makefile.am.common
+ 
+ lib_LTLIBRARIES = libssl.la
+ 
+-libssl_la_LDFLAGS = -version-info 27:0:0
++libssl_la_LDFLAGS = -version-info 27:0:0 -no-undefined
++libssl_la_LIBADD = $(top_builddir)/crypto/libcrypto.la
+ 
+ libssl_la_CFLAGS = $(CFLAGS) $(USER_CFLAGS)
+ libssl_la_SOURCES =
