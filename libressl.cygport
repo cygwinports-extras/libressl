@@ -1,5 +1,5 @@
 NAME="libressl"
-VERSION=2.0.1
+VERSION=2.0.2
 RELEASE=1
 CATEGORY="Libs"
 SUMMARY="A general purpose cryptography toolkit with TLS implementation"
